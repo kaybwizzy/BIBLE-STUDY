@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Christ the Way — Daily Reading Path</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #15141f;
+    --bg-soft: #1c1b29;
+    --card: #201f2e;
+    --card-border: rgba(255,255,255,0.08);
+    --text: #f1ede4;
+    --text-dim: #a6a1b8;
+    --text-faint: #726e88;
+    --gold: #dcae55;
+    --gold-soft: rgba(220,174,85,0.14);
+    --done-bg: rgba(220,174,85,0.10);
+    --track: rgba(255,255,255,0.08);
+    --shadow: 0 10px 30px rgba(0,0,0,0.35);
+    --radius: 18px;
+    --serif: "Fraunces", Georgia, "Times New Roman", serif;
+    --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg: #f4f0e6;
+      --bg-soft: #ece5d3;
+      --card: #fffdf8;
+      --card-border: rgba(30,25,15,0.10);
+      --text: #221f2c;
+      --text-dim: #5c5670;
+      --text-faint: #8a8398;
+      --gold: #b1811f;
+      --gold-soft: rgba(177,129,31,0.12);
+      --done-bg: rgba(177,129,31,0.08);
+      --track: rgba(30,25,15,0.08);
+      --shadow: 0 10px 26px rgba(60,45,10,0.10);
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg: #f4f0e6;
+    --bg-soft: #ece5d3;
+    --card: #fffdf8;
+    --card-border: rgba(30,25,15,0.10);
+    --text: #221f2c;
+    --text-dim: #5c5670;
+    --text-faint: #8a8398;
+    --gold: #b1811f;
+    --gold-soft: rgba(177,129,31,0.12);
+    --done-bg: rgba(177,129,31,0.08);
+    --track: rgba(30,25,15,0.08);
+    --shadow: 0 10px 26px rgba(60,45,10,0.10);
+    color-scheme: light;
+  }
+
+  *{ box-sizing: border-box; }
+  html, body{
+    margin:0; padding:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  html{
+    scroll-padding-top: env(safe-area-inset-top, 0px);
+  }
+  body{
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 40px);
+    min-height: 100%;
+    background-image:
+      radial-gradient(60% 45% at 12% -6%, var(--gold-soft), transparent 60%),
+      radial-gradient(50% 40% at 100% 0%, rgba(220,174,85,0.06), transparent 55%);
+    background-attachment: fixed;
+  }
+
+  .wrap{
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 34px 20px 10px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding: 6px 2px 26px;
+  }
+  .hero .kicker{
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15px;
+    color: var(--gold);
+    letter-spacing: 0.01em;
+    margin: 0 0 6px;
+  }
+  .hero h1{
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(32px, 8vw, 44px);
+    line-height: 1.05;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  .hero p.sub{
+    color: var(--text-dim);
+    font-size: 15px;
+    line-height: 1.55;
+    margin: 0 0 22px;
+    max-width: 46ch;
+  }
+
+  .progress-card{
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+  }
+  .progress-top{
+    display:flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .progress-top .label{
+    font-size: 12.5px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .progress-top .count{
+    font-family: var(--serif);
+    font-size: 26px;
+    color: var(--text);
+  }
+  .progress-top .count b{
+    color: var(--gold);
+    font-weight: 600;
+  }
+  .bar-track{
+    height: 8px;
+    background: var(--track);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .bar-fill{
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--gold), #f0cd82);
+    width: 0%;
+    transition: width 0.5s ease;
+  }
+  .progress-foot{
+    display:flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--text-faint);
+  }
+
+  /* ---------- Today card ---------- */
+  .today{
+    margin-top: 22px;
+    border-radius: var(--radius);
+    padding: 22px;
+    background: linear-gradient(160deg, var(--gold-soft), transparent 65%), var(--card);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .today::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width: 4px;
+    background: var(--gold);
+  }
+  .today .eyebrow{
+    font-size: 12.5px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0 0 8px;
+    font-weight: 600;
+  }
+  .today .date{
+    font-family: var(--serif);
+    font-size: 21px;
+    margin: 0 0 4px;
+  }
+  .today .reading{
+    color: var(--text-dim);
+    font-size: 15.5px;
+    line-height: 1.5;
+    margin: 0 0 16px;
+  }
+  .today label.check{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14.5px;
+    color: var(--text);
+    user-select: none;
+  }
+  .today input[type="checkbox"]{
+    width: 20px; height: 20px;
+    accent-color: var(--gold);
+    cursor: pointer;
+  }
+  .outside-range{
+    font-size: 13.5px;
+    color: var(--text-faint);
+    margin-top: 4px;
+  }
+  .today .note-field{
+    margin-top: 16px;
+  }
+  .today .note-field label{
+    display:block;
+    font-size: 12.5px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+  .today textarea{
+    width: 100%;
+    min-height: 64px;
+    resize: vertical;
+    background: var(--bg-soft);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .today textarea:focus, .day-item textarea:focus{
+    outline: 1.5px solid var(--gold);
+    outline-offset: 1px;
+  }
+
+  /* ---------- Note toggle + box (in day list) ---------- */
+  .note-btn{
+    flex: none;
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text-faint);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+  }
+  .note-btn:hover{
+    background: var(--track);
+    color: var(--text-dim);
+  }
+  .note-btn svg{ width: 16px; height: 16px; }
+  .note-btn .dot{
+    position: absolute;
+    top: 4px; right: 4px;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent, var(--gold));
+    display: none;
+  }
+  .note-btn.has-note .dot{ display: block; }
+  .note-btn.active{
+    background: var(--track);
+    color: var(--gold);
+  }
+
+  .note-box{
+    padding: 2px 10px 10px 62px;
+  }
+  .note-box textarea{
+    width: 100%;
+    min-height: 54px;
+    resize: vertical;
+    background: var(--bg-soft);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 9px 11px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .note-box textarea::placeholder{
+    color: var(--text-faint);
+  }
+
+  /* ---------- Month list ---------- */
+  .months{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  details.month{
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+  }
+  details.month[open]{
+    box-shadow: var(--shadow);
+  }
+  summary.month-head{
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    position: relative;
+  }
+  summary.month-head::-webkit-details-marker{ display:none; }
+  summary.month-head::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width: 5px;
+    background: var(--accent);
+  }
+  .swatch{
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex: none;
+  }
+  .month-title{
+    font-family: var(--serif);
+    font-size: 18px;
+    flex: 1;
+    min-width: 0;
+  }
+  .month-title small{
+    display:block;
+    font-family: var(--sans);
+    font-size: 12px;
+    color: var(--text-faint);
+    font-weight: 500;
+    margin-top: 1px;
+  }
+  .month-frac{
+    font-size: 13px;
+    color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+    flex: none;
+  }
+  .chev{
+    width: 18px; height: 18px;
+    flex: none;
+    color: var(--text-faint);
+    transition: transform 0.25s ease;
+  }
+  details.month[open] .chev{ transform: rotate(180deg); }
+
+  .mini-track{
+    height: 4px;
+    background: var(--track);
+    margin: 0 18px;
+  }
+  .mini-fill{
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.35s ease;
+  }
+
+  .day-list{
+    padding: 6px 8px 14px;
+  }
+  .day-item{
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .day-row{
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 9px 10px;
+    border-radius: 10px;
+  }
+  .day-row.done{
+    background: var(--done-bg);
+  }
+  .day-row.today-row{
+    outline: 1.5px solid var(--gold);
+    outline-offset: -1.5px;
+  }
+  .day-row input[type="checkbox"]{
+    margin-top: 2px;
+    width: 18px; height: 18px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    flex: none;
+  }
+  .day-num{
+    font-variant-numeric: tabular-nums;
+    color: var(--text-faint);
+    font-size: 13px;
+    width: 22px;
+    flex: none;
+    padding-top: 1px;
+    text-align: right;
+  }
+  .day-text{
+    flex: 1;
+    font-size: 14.5px;
+    line-height: 1.45;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .day-row.done .day-text{
+    color: var(--text-faint);
+    text-decoration: line-through;
+    text-decoration-color: var(--text-faint);
+    text-decoration-thickness: 1px;
+  }
+
+  footer{
+    max-width: 760px;
+    margin: 30px auto 0;
+    padding: 0 20px 10px;
+    color: var(--text-faint);
+    font-size: 12.5px;
+    text-align: center;
+    line-height: 1.6;
+  }
+  footer button{
+    background: none;
+    border: 1px solid var(--card-border);
+    color: var(--text-dim);
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 12.5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  footer button:hover{
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <p class="kicker">Encounter Series I</p>
+    <h1>Christ the Way</h1>
+    <p class="sub">A year-long walk through the life of Jesus, one reading a day, from <span id="rangeStart"></span> to <span id="rangeEnd"></span>.</p>
+    <div class="progress-card">
+      <div class="progress-top">
+        <div>
+          <div class="label">Your progress</div>
+          <div class="count"><b id="doneCount">0</b> of 365 read</div>
+        </div>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="overallBar"></div></div>
+      <div class="progress-foot">
+        <span id="overallPct">0%</span>
+        <span id="overallDayLabel"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="today" id="todayCard">
+    <p class="eyebrow" id="todayEyebrow">Today's reading</p>
+    <p class="date" id="todayDate"></p>
+    <p class="reading" id="todayReading"></p>
+    <label class="check">
+      <input type="checkbox" id="todayCheck">
+      <span id="todayCheckLabel">Mark today's reading complete</span>
+    </label>
+    <div class="note-field" id="todayNoteField">
+      <label for="todayNote">What did you learn?</label>
+      <textarea id="todayNote" placeholder="Jot down a thought, a verse that stood out, a prayer..."></textarea>
+    </div>
+  </div>
+
+  <div class="months" id="months"></div>
+
+  <footer>
+    Checkmarks and notes are saved on this device only.
+    <br>
+    <button id="resetBtn" type="button">Reset all checkmarks</button>
+  </footer>
+</div>
+
+<script>
+const READINGS = [{"date":"2026-09-21","day":21,"month":9,"year":2026,"reading":"Mark 1:1"},{"date":"2026-09-22","day":22,"month":9,"year":2026,"reading":"John 1:1-14"},{"date":"2026-09-23","day":23,"month":9,"year":2026,"reading":"DA 19-21"},{"date":"2026-09-24","day":24,"month":9,"year":2026,"reading":"DA 22-24"},{"date":"2026-09-25","day":25,"month":9,"year":2026,"reading":"DA 25, 26"},{"date":"2026-09-26","day":26,"month":9,"year":2026,"reading":"DA 27, 28"},{"date":"2026-09-27","day":27,"month":9,"year":2026,"reading":"DA 29, 30"},{"date":"2026-09-28","day":28,"month":9,"year":2026,"reading":"Matt. 1:1-17"},{"date":"2026-09-29","day":29,"month":9,"year":2026,"reading":"Luke 3:23-38; DA 31, 32"},{"date":"2026-09-30","day":30,"month":9,"year":2026,"reading":"DA 33-35"},{"date":"2026-10-01","day":1,"month":10,"year":2026,"reading":"DA 36-38"},{"date":"2026-10-02","day":2,"month":10,"year":2026,"reading":"Matt. 1:18-25; DA 43, 44"},{"date":"2026-10-03","day":3,"month":10,"year":2026,"reading":"Luke 2:1-21"},{"date":"2026-10-04","day":4,"month":10,"year":2026,"reading":"DA 47-49"},{"date":"2026-10-05","day":5,"month":10,"year":2026,"reading":"Luke 2:22-38; DA 50,51"},{"date":"2026-10-06","day":6,"month":10,"year":2026,"reading":"DA 52,55"},{"date":"2026-10-07","day":7,"month":10,"year":2026,"reading":"DA 56-58"},{"date":"2026-10-08","day":8,"month":10,"year":2026,"reading":"Matt. 2:1-23; Luke 2:39, 40"},{"date":"2026-10-09","day":9,"month":10,"year":2026,"reading":"DA 59-62"},{"date":"2026-10-10","day":10,"month":10,"year":2026,"reading":"DA 63, 64"},{"date":"2026-10-11","day":11,"month":10,"year":2026,"reading":"DA 65-67"},{"date":"2026-10-12","day":12,"month":10,"year":2026,"reading":"DA 68-70"},{"date":"2026-10-13","day":13,"month":10,"year":2026,"reading":"DA 71, 72"},{"date":"2026-10-14","day":14,"month":10,"year":2026,"reading":"DA 73, 74"},{"date":"2026-10-15","day":15,"month":10,"year":2026,"reading":"Luke 2:41-52; DA 75, 76"},{"date":"2026-10-16","day":16,"month":10,"year":2026,"reading":"DA 77-79"},{"date":"2026-10-17","day":17,"month":10,"year":2026,"reading":"DA 80, 81"},{"date":"2026-10-18","day":18,"month":10,"year":2026,"reading":"DA 82, 83"},{"date":"2026-10-19","day":19,"month":10,"year":2026,"reading":"DA 84-86"},{"date":"2026-10-20","day":20,"month":10,"year":2026,"reading":"DA 87-89"},{"date":"2026-10-21","day":21,"month":10,"year":2026,"reading":"DA 90-92; Mark 1:2-8"},{"date":"2026-10-22","day":22,"month":10,"year":2026,"reading":"Matt. 3:1-12; Mark 1:2-8"},{"date":"2026-10-23","day":23,"month":10,"year":2026,"reading":"Luke 3:1-18; DA 97"},{"date":"2026-10-24","day":24,"month":10,"year":2026,"reading":"DA 98-100"},{"date":"2026-10-25","day":25,"month":10,"year":2026,"reading":"DA 101, 102"},{"date":"2026-10-26","day":26,"month":10,"year":2026,"reading":"DA 103-105"},{"date":"2026-10-27","day":27,"month":10,"year":2026,"reading":"DA 106-108"},{"date":"2026-10-28","day":28,"month":10,"year":2026,"reading":"Matt. 3:13-17; Mark 1:9-11; Luke 3:21, 22; DA 109,110"},{"date":"2026-10-29","day":29,"month":10,"year":2026,"reading":"DA 111-113"},{"date":"2026-10-30","day":30,"month":10,"year":2026,"reading":"Matt. 4:1-11; Mark 1:12, 13"},{"date":"2026-10-31","day":31,"month":10,"year":2026,"reading":"Luke 4:1-13; DA 114, 115"},{"date":"2026-11-01","day":1,"month":11,"year":2026,"reading":"DA 116-118"},{"date":"2026-11-02","day":2,"month":11,"year":2026,"reading":"DA 119-121"},{"date":"2026-11-03","day":3,"month":11,"year":2026,"reading":"DA 122, 123"},{"date":"2026-11-04","day":4,"month":11,"year":2026,"reading":"DA 124-126"},{"date":"2026-11-05","day":5,"month":11,"year":2026,"reading":"DA 129-131"},{"date":"2026-11-06","day":6,"month":11,"year":2026,"reading":"John 1:15-51; DA 132"},{"date":"2026-11-07","day":7,"month":11,"year":2026,"reading":"DA 133-135"},{"date":"2026-11-08","day":8,"month":11,"year":2026,"reading":"DA 136, 137"},{"date":"2026-11-09","day":9,"month":11,"year":2026,"reading":"DA 138-149"},{"date":"2026-11-10","day":10,"month":11,"year":2026,"reading":"DA 141-143"},{"date":"2026-11-11","day":11,"month":11,"year":2026,"reading":"John 2:1-12; DA 144-146"},{"date":"2026-11-12","day":12,"month":11,"year":2026,"reading":"DA 147-149"},{"date":"2026-11-13","day":13,"month":11,"year":2026,"reading":"DA 150-153"},{"date":"2026-11-14","day":14,"month":11,"year":2026,"reading":"John 2:13-25; DA 154, 155"},{"date":"2026-11-15","day":15,"month":11,"year":2026,"reading":"DA 156, 158"},{"date":"2026-11-16","day":16,"month":11,"year":2026,"reading":"DA 161-163"},{"date":"2026-11-17","day":17,"month":11,"year":2026,"reading":"DA 164-166"},{"date":"2026-11-18","day":18,"month":11,"year":2026,"reading":"John 3:1-22; DA 167, 168"},{"date":"2026-11-19","day":19,"month":11,"year":2026,"reading":"DA 171-173"},{"date":"2026-11-20","day":20,"month":11,"year":2026,"reading":"DA 174-177"},{"date":"2026-11-21","day":21,"month":11,"year":2026,"reading":"John 3:23-36; DA 178, 179"},{"date":"2026-11-22","day":22,"month":11,"year":2026,"reading":"DA 180-182"},{"date":"2026-11-23","day":23,"month":11,"year":2026,"reading":"DA 183, 184; John 4:1-42"},{"date":"2026-11-24","day":24,"month":11,"year":2026,"reading":"DA 187-189"},{"date":"2026-11-25","day":25,"month":11,"year":2026,"reading":"DA 190-192"},{"date":"2026-11-26","day":26,"month":11,"year":2026,"reading":"DA 193-195"},{"date":"2026-11-27","day":27,"month":11,"year":2026,"reading":"Matt. 4:23-25; Luke 4:14, 15; John 4:43-54; DA 196, 197"},{"date":"2026-11-28","day":28,"month":11,"year":2026,"reading":"DA 198-200"},{"date":"2026-11-29","day":29,"month":11,"year":2026,"reading":"John 5; DA 201"},{"date":"2026-11-30","day":30,"month":11,"year":2026,"reading":"DA 202-204"},{"date":"2026-12-01","day":1,"month":12,"year":2026,"reading":"DA 205-207"},{"date":"2026-12-02","day":2,"month":12,"year":2026,"reading":"DA 208-210"},{"date":"2026-12-03","day":3,"month":12,"year":2026,"reading":"DA 211-213"},{"date":"2026-12-04","day":4,"month":12,"year":2026,"reading":"Matt. 11:1-27; Luke 7:18-35"},{"date":"2026-12-05","day":5,"month":12,"year":2026,"reading":"Matt. 14:1-12; Luke 3:19, 20; DA 214-216"},{"date":"2026-12-06","day":6,"month":12,"year":2026,"reading":"Mark 6:14-29"},{"date":"2026-12-07","day":7,"month":12,"year":2026,"reading":"DA 217-219"},{"date":"2026-12-08","day":8,"month":12,"year":2026,"reading":"DA 220-222"},{"date":"2026-12-09","day":9,"month":12,"year":2026,"reading":"DA 223-225"},{"date":"2026-12-10","day":10,"month":12,"year":2026,"reading":"Mark 1:14, 15; DA 231.232"},{"date":"2026-12-11","day":11,"month":12,"year":2026,"reading":"DA 233-235"},{"date":"2026-12-12","day":12,"month":12,"year":2026,"reading":"Matt. 13:53-58; Mark 6:1-6; DA 236, 237"},{"date":"2026-12-13","day":13,"month":12,"year":2026,"reading":"Luke 4:16-30"},{"date":"2026-12-14","day":14,"month":12,"year":2026,"reading":"DA 238-240"},{"date":"2026-12-15","day":15,"month":12,"year":2026,"reading":"DA 241-243"},{"date":"2026-12-16","day":16,"month":12,"year":2026,"reading":"Matt. 4:18-22; Mark 1:16-20; DA 244, 245"},{"date":"2026-12-17","day":17,"month":12,"year":2026,"reading":"Luke 5:1-11"},{"date":"2026-12-18","day":18,"month":12,"year":2026,"reading":"DA 246-251"},{"date":"2026-12-19","day":19,"month":12,"year":2026,"reading":"Matt. 4:12-17; Mark 1:21-39"},{"date":"2026-12-20","day":20,"month":12,"year":2026,"reading":"Luke 4:31-44; DA 252, 253"},{"date":"2026-12-21","day":21,"month":12,"year":2026,"reading":"Matt. 8:14-17; DA 254-256"},{"date":"2026-12-22","day":22,"month":12,"year":2026,"reading":"DA 257-259"},{"date":"2026-12-23","day":23,"month":12,"year":2026,"reading":"DA 260, 261"},{"date":"2026-12-24","day":24,"month":12,"year":2026,"reading":"Matt. 8:14; Mark 1: 40-45; DA 262"},{"date":"2026-12-25","day":25,"month":12,"year":2026,"reading":"Luke 5:12-26"},{"date":"2026-12-26","day":26,"month":12,"year":2026,"reading":"Matt. 9:1-8; 32-34"},{"date":"2026-12-27","day":27,"month":12,"year":2026,"reading":"Mark 2:1-12; DA 263-265"},{"date":"2026-12-28","day":28,"month":12,"year":2026,"reading":"DA 266-268"},{"date":"2026-12-29","day":29,"month":12,"year":2026,"reading":"DA 269-271"},{"date":"2026-12-30","day":30,"month":12,"year":2026,"reading":"Matt. 9:9-17; Mark 2:13-22"},{"date":"2026-12-31","day":31,"month":12,"year":2026,"reading":"Luke 5:27-39"},{"date":"2027-01-01","day":1,"month":1,"year":2027,"reading":"DA 272-274"},{"date":"2027-01-02","day":2,"month":1,"year":2027,"reading":"DA 275-277"},{"date":"2027-01-03","day":3,"month":1,"year":2027,"reading":"DA 278-280"},{"date":"2027-01-04","day":4,"month":1,"year":2027,"reading":"Matt. 12:1-21; Mark 2:23-28"},{"date":"2027-01-05","day":5,"month":1,"year":2027,"reading":"Luke 6:1-11; DA 281, 282"},{"date":"2027-01-06","day":6,"month":1,"year":2027,"reading":"Mark 3:1-12; DA 283-285"},{"date":"2027-01-07","day":7,"month":1,"year":2027,"reading":"DA 286-289"},{"date":"2027-01-08","day":8,"month":1,"year":2027,"reading":"Matt. 8:18-22; Mark 3:13-19"},{"date":"2027-01-09","day":9,"month":1,"year":2027,"reading":"Luke 6:12-16; DA 290, 291"},{"date":"2027-01-10","day":10,"month":1,"year":2027,"reading":"Luke 9:57-62; DA 292-294"},{"date":"2027-01-11","day":11,"month":1,"year":2027,"reading":"DA 295-297"},{"date":"2027-01-12","day":12,"month":1,"year":2027,"reading":"Matt. 5"},{"date":"2027-01-13","day":13,"month":1,"year":2027,"reading":"Matt. 6"},{"date":"2027-01-14","day":14,"month":1,"year":2027,"reading":"Matt. 7:1-29"},{"date":"2027-01-15","day":15,"month":1,"year":2027,"reading":"Luke 6:17-49"},{"date":"2027-01-16","day":16,"month":1,"year":2027,"reading":"DA 298-300"},{"date":"2027-01-17","day":17,"month":1,"year":2027,"reading":"DA 301-305"},{"date":"2027-01-18","day":18,"month":1,"year":2027,"reading":"DA 306-308"},{"date":"2027-01-19","day":19,"month":1,"year":2027,"reading":"DA 309, 310"},{"date":"2027-01-20","day":20,"month":1,"year":2027,"reading":"DA 311, 312"},{"date":"2027-01-21","day":21,"month":1,"year":2027,"reading":"DA 313, 314"},{"date":"2027-01-22","day":22,"month":1,"year":2027,"reading":"Matt. 8:5-13; DA 315, 316"},{"date":"2027-01-23","day":23,"month":1,"year":2027,"reading":"Luke 7:1-17"},{"date":"2027-01-24","day":24,"month":1,"year":2027,"reading":"DA 317, 318"},{"date":"2027-01-25","day":25,"month":1,"year":2027,"reading":"DA 319, 320"},{"date":"2027-01-26","day":26,"month":1,"year":2027,"reading":"Matt. 12:22-50"},{"date":"2027-01-27","day":27,"month":1,"year":2027,"reading":"Mark 3:20-35; Luke 8:19-21; DA 321"},{"date":"2027-01-28","day":28,"month":1,"year":2027,"reading":"DA 322-324"},{"date":"2027-01-29","day":29,"month":1,"year":2027,"reading":"DA 325-327"},{"date":"2027-01-30","day":30,"month":1,"year":2027,"reading":"Matt. 13:1-52"},{"date":"2027-01-31","day":31,"month":1,"year":2027,"reading":"Mark 4:1-34; Luke 8:1-18"},{"date":"2027-02-01","day":1,"month":2,"year":2027,"reading":"Matt. 11:28-30; DA 328, 329"},{"date":"2027-02-02","day":2,"month":2,"year":2027,"reading":"DA 330-332"},{"date":"2027-02-03","day":3,"month":2,"year":2027,"reading":"Matt. 8:23-34; Mark 4:35, 41"},{"date":"2027-02-04","day":4,"month":2,"year":2027,"reading":"Luke 8:22-39; DA 333, 334"},{"date":"2027-02-05","day":5,"month":2,"year":2027,"reading":"Mark 5:1-20; DA 335-337"},{"date":"2027-02-06","day":6,"month":2,"year":2027,"reading":"DA 338, 339"},{"date":"2027-02-07","day":7,"month":2,"year":2027,"reading":"DA 340, 341"},{"date":"2027-02-08","day":8,"month":2,"year":2027,"reading":"Matt. 9:18-31; Mark 5:21-43"},{"date":"2027-02-09","day":9,"month":2,"year":2027,"reading":"Luke 8:40-56; DA 342"},{"date":"2027-02-10","day":10,"month":2,"year":2027,"reading":"DA 343-344"},{"date":"2027-02-11","day":11,"month":2,"year":2027,"reading":"DA 347, 348"},{"date":"2027-02-12","day":12,"month":2,"year":2027,"reading":"Matt. 10:1-42"},{"date":"2027-02-13","day":13,"month":2,"year":2027,"reading":"Mark 6:7-13; Luke 9:1-6; DA 349"},{"date":"2027-02-14","day":14,"month":2,"year":2027,"reading":"DA 350-352"},{"date":"2027-02-15","day":15,"month":2,"year":2027,"reading":"DA 353-355"},{"date":"2027-02-16","day":16,"month":2,"year":2027,"reading":"DA 356-358"},{"date":"2027-02-17","day":17,"month":2,"year":2027,"reading":"Matt. 9:35-38; Mark 6:30-32; Luke 9:7-9; DA 359, 360"},{"date":"2027-02-18","day":18,"month":2,"year":2027,"reading":"DA 363-363"},{"date":"2027-02-19","day":19,"month":2,"year":2027,"reading":"Matt. 14:13-21; Mark 6:33-44"},{"date":"2027-02-20","day":20,"month":2,"year":2027,"reading":"Luke 9:10-17; John 6:1-13"},{"date":"2027-02-21","day":21,"month":2,"year":2027,"reading":"DA 364, 365"},{"date":"2027-02-22","day":22,"month":2,"year":2027,"reading":"DA 366-368"},{"date":"2027-02-23","day":23,"month":2,"year":2027,"reading":"DA 369-371"},{"date":"2027-02-24","day":24,"month":2,"year":2027,"reading":"Matt. 14:22-36; Mark 6:45-56"},{"date":"2027-02-25","day":25,"month":2,"year":2027,"reading":"John 6:14-21; DA 377"},{"date":"2027-02-26","day":26,"month":2,"year":2027,"reading":"DA 378-380"},{"date":"2027-02-27","day":27,"month":2,"year":2027,"reading":"DA 381, 382"},{"date":"2027-02-28","day":28,"month":2,"year":2027,"reading":"John 6:22-65; DA 383, 384"},{"date":"2027-03-01","day":1,"month":3,"year":2027,"reading":"DA 385-387"},{"date":"2027-03-02","day":2,"month":3,"year":2027,"reading":"DA 388-390"},{"date":"2027-03-03","day":3,"month":3,"year":2027,"reading":"DA 391-394"},{"date":"2027-03-04","day":4,"month":3,"year":2027,"reading":"Matt. 15:1-20"},{"date":"2027-03-05","day":5,"month":3,"year":2027,"reading":"Mark 7:1-23"},{"date":"2027-03-06","day":6,"month":3,"year":2027,"reading":"DA 395-398"},{"date":"2027-03-07","day":7,"month":3,"year":2027,"reading":"Matt. 15:21-28; Mark 7:24-30; DA 399, 400"},{"date":"2027-03-08","day":8,"month":3,"year":2027,"reading":"DA 401-403"},{"date":"2027-03-09","day":9,"month":3,"year":2027,"reading":"Matt. 15:29-39; Mark 7:31-37"},{"date":"2027-03-10","day":10,"month":3,"year":2027,"reading":"DA 404, 405"},{"date":"2027-03-11","day":11,"month":3,"year":2027,"reading":"Matt. 16:1-12; DA 406, 407"},{"date":"2027-03-12","day":12,"month":3,"year":2027,"reading":"Mark 8:1-21"},{"date":"2027-03-13","day":13,"month":3,"year":2027,"reading":"DA 408, 409"},{"date":"2027-03-14","day":14,"month":3,"year":2027,"reading":"Mark 8:22-26; DA 410, 411"},{"date":"2027-03-15","day":15,"month":3,"year":2027,"reading":"Matt. 16:13-28; Mark 8:27-38"},{"date":"2027-03-16","day":16,"month":3,"year":2027,"reading":"Luke 9:18-27; John 6:66-71; DA 412, 413"},{"date":"2027-03-17","day":17,"month":3,"year":2027,"reading":"Mark 9:1; DA 414, 415"},{"date":"2027-03-18","day":18,"month":3,"year":2027,"reading":"DA 416, 418"},{"date":"2027-03-19","day":19,"month":3,"year":2027,"reading":"Matt. 17:1-8; Mark 9:1-8; Luke 9:28-36; DA 419, 420"},{"date":"2027-03-20","day":20,"month":3,"year":2027,"reading":"DA 421-425"},{"date":"2027-03-21","day":21,"month":3,"year":2027,"reading":"Matt. 17:9-21; Mark 9:9-29"},{"date":"2027-03-22","day":22,"month":3,"year":2027,"reading":"Luke 9:37-45; DA 426, 427"},{"date":"2027-03-23","day":23,"month":3,"year":2027,"reading":"DA 428-431"},{"date":"2027-03-24","day":24,"month":3,"year":2027,"reading":"Matt. 17:22-27; Luke 9:46-50; DA 432, 433"},{"date":"2027-03-25","day":25,"month":3,"year":2027,"reading":"Mark 9:30-50"},{"date":"2027-03-26","day":26,"month":3,"year":2027,"reading":"Matt. 18:1-35"},{"date":"2027-03-27","day":27,"month":3,"year":2027,"reading":"DA 434-436"},{"date":"2027-03-28","day":28,"month":3,"year":2027,"reading":"DA 437-439"},{"date":"2027-03-29","day":29,"month":3,"year":2027,"reading":"DA 440-442"},{"date":"2027-03-30","day":30,"month":3,"year":2027,"reading":"John 7:1-15, 37-39; DA 447, 448"},{"date":"2027-03-31","day":31,"month":3,"year":2027,"reading":"DA 449-451"},{"date":"2027-04-01","day":1,"month":4,"year":2027,"reading":"DA 452-454"},{"date":"2027-04-02","day":2,"month":4,"year":2027,"reading":"John 7:16-36, 40-53"},{"date":"2027-04-03","day":3,"month":4,"year":2027,"reading":"DA 455, 456"},{"date":"2027-04-04","day":4,"month":4,"year":2027,"reading":"John 8:1-11; DA 457-459"},{"date":"2027-04-05","day":5,"month":4,"year":2027,"reading":"DA 460-462"},{"date":"2027-04-06","day":6,"month":4,"year":2027,"reading":"John 8:12-59"},{"date":"2027-04-07","day":7,"month":4,"year":2027,"reading":"John 9"},{"date":"2027-04-08","day":8,"month":4,"year":2027,"reading":"DA 463-465"},{"date":"2027-04-09","day":9,"month":4,"year":2027,"reading":"DA 466-468"},{"date":"2027-04-10","day":10,"month":4,"year":2027,"reading":"DA 469-471"},{"date":"2027-04-11","day":11,"month":4,"year":2027,"reading":"DA 472-475"},{"date":"2027-04-12","day":12,"month":4,"year":2027,"reading":"John 10:1-30; DA 476"},{"date":"2027-04-13","day":13,"month":4,"year":2027,"reading":"DA 477-479"},{"date":"2027-04-14","day":14,"month":4,"year":2027,"reading":"DA 480-484"},{"date":"2027-04-15","day":15,"month":4,"year":2027,"reading":"Matt. 19:1-12; Luke 9:51-56"},{"date":"2027-04-16","day":16,"month":4,"year":2027,"reading":"Mark 10:1-12; DA 485"},{"date":"2027-04-17","day":17,"month":4,"year":2027,"reading":"Matt. 19:23-30; Mark 10:23-31; DA 486-488"},{"date":"2027-04-18","day":18,"month":4,"year":2027,"reading":"Luke 10:1-24"},{"date":"2027-04-19","day":19,"month":4,"year":2027,"reading":"Matt. 20:1-19; 29-34"},{"date":"2027-04-20","day":20,"month":4,"year":2027,"reading":"Mark 10-46-52; DA 489-493"},{"date":"2027-04-21","day":21,"month":4,"year":2027,"reading":"DA 494-496"},{"date":"2027-04-22","day":22,"month":4,"year":2027,"reading":"Luke 10:25-37; DA 497, 498"},{"date":"2027-04-23","day":23,"month":4,"year":2027,"reading":"DA 499-503"},{"date":"2027-04-24","day":24,"month":4,"year":2027,"reading":"DA 504, 505"},{"date":"2027-04-25","day":25,"month":4,"year":2027,"reading":"Luke 11"},{"date":"2027-04-26","day":26,"month":4,"year":2027,"reading":"Luke 12"},{"date":"2027-04-27","day":27,"month":4,"year":2027,"reading":"Luke 13"},{"date":"2027-04-28","day":28,"month":4,"year":2027,"reading":"Luke 14"},{"date":"2027-04-29","day":29,"month":4,"year":2027,"reading":"Luke 15"},{"date":"2027-04-30","day":30,"month":4,"year":2027,"reading":"Luke 16"},{"date":"2027-05-01","day":1,"month":5,"year":2027,"reading":"Luke 17:1-19, 23-37"},{"date":"2027-05-02","day":2,"month":5,"year":2027,"reading":"Luke 18:1-14, 24-30, 35-43; 19:11-28"},{"date":"2027-05-03","day":3,"month":5,"year":2027,"reading":"Luke 17:20-22; DA 506-507"},{"date":"2027-05-04","day":4,"month":5,"year":2027,"reading":"DA 508-510"},{"date":"2027-05-05","day":5,"month":5,"year":2027,"reading":"Matt. 19:13-15; Mark 10:13-16; Luke 18:15-17; DA 511, 512"},{"date":"2027-05-06","day":6,"month":5,"year":2027,"reading":"DA 515-517"},{"date":"2027-05-07","day":7,"month":5,"year":2027,"reading":"Matt. 19:16-22; Mark 10:17-22; Luke 18:18-23; DA 518"},{"date":"2027-05-08","day":8,"month":5,"year":2027,"reading":"DA 519-523"},{"date":"2027-05-09","day":9,"month":5,"year":2027,"reading":"Luke 10:38-42; DA 524, 525"},{"date":"2027-05-10","day":10,"month":5,"year":2027,"reading":"John 11:1-44"},{"date":"2027-05-11","day":11,"month":5,"year":2027,"reading":"DA 526-528"},{"date":"2027-05-12","day":12,"month":5,"year":2027,"reading":"DA 529-533"},{"date":"2027-05-13","day":13,"month":5,"year":2027,"reading":"DA 534-536"},{"date":"2027-05-14","day":14,"month":5,"year":2027,"reading":"John 10:31-42; DA 537, 538"},{"date":"2027-05-15","day":15,"month":5,"year":2027,"reading":"John 11:45-54; DA 539-541"},{"date":"2027-05-16","day":16,"month":5,"year":2027,"reading":"Matt. 20:20-28; Mark 20:32-45; Luke 18:31-34; DA 547, 548"},{"date":"2027-05-17","day":17,"month":5,"year":2027,"reading":"DA 549-551"},{"date":"2027-05-18","day":18,"month":5,"year":2027,"reading":"Luke 19:1-10; DA 552, 553"},{"date":"2027-05-19","day":19,"month":5,"year":2027,"reading":"DA 554-556"},{"date":"2027-05-20","day":20,"month":5,"year":2027,"reading":"Matt. 26:6-13; Mark 14:3-11; Luke 7:36-50; John 11:55-57; DA 557"},{"date":"2027-05-21","day":21,"month":5,"year":2027,"reading":"John 12:1-11; DA 558-560"},{"date":"2027-05-22","day":22,"month":5,"year":2027,"reading":"DA 563-565"},{"date":"2027-05-23","day":23,"month":5,"year":2027,"reading":"Luke 10:25-37; DA 497, 498"},{"date":"2027-05-24","day":24,"month":5,"year":2027,"reading":"Matt. 21:1-11; Mark 11:1-10"},{"date":"2027-05-25","day":25,"month":5,"year":2027,"reading":"Luke 19:29-44; John 12:12-19; DA 569"},{"date":"2027-05-26","day":26,"month":5,"year":2027,"reading":"DA 570-572"},{"date":"2027-05-27","day":27,"month":5,"year":2027,"reading":"DA 575, 576"},{"date":"2027-05-28","day":28,"month":5,"year":2027,"reading":"DA 577-579"},{"date":"2027-05-29","day":29,"month":5,"year":2027,"reading":"Matt. 21:17-19; Mark 11:11-14, 20-26; DA 580"},{"date":"2027-05-30","day":30,"month":5,"year":2027,"reading":"DA 581-583"},{"date":"2027-05-31","day":31,"month":5,"year":2027,"reading":"DA 584-588"},{"date":"2027-06-01","day":1,"month":6,"year":2027,"reading":"Matt. 21:12-16, 20-46"},{"date":"2027-06-02","day":2,"month":6,"year":2027,"reading":"Mark 11:15-19, 27-33; Luke 19:45-48"},{"date":"2027-06-03","day":3,"month":6,"year":2027,"reading":"Mark 12:1-12; DA 589-591"},{"date":"2027-06-04","day":4,"month":6,"year":2027,"reading":"Luke 20:1-19"},{"date":"2027-06-05","day":5,"month":6,"year":2027,"reading":"DA 592-594"},{"date":"2027-06-06","day":6,"month":6,"year":2027,"reading":"DA 595-597"},{"date":"2027-06-07","day":7,"month":6,"year":2027,"reading":"DA 598-600"},{"date":"2027-06-08","day":8,"month":6,"year":2027,"reading":"Matt. 22"},{"date":"2027-06-09","day":9,"month":6,"year":2027,"reading":"Mark 12:13-40; Luke 20:20-47"},{"date":"2027-06-10","day":10,"month":6,"year":2027,"reading":"DA 601-603"},{"date":"2027-06-11","day":11,"month":6,"year":2027,"reading":"DA 604-606"},{"date":"2027-06-12","day":12,"month":6,"year":2027,"reading":"DA 607-609"},{"date":"2027-06-13","day":13,"month":6,"year":2027,"reading":"Matt. 23"},{"date":"2027-06-14","day":14,"month":6,"year":2027,"reading":"Mark 12:41-44; Luke 21:1-4; DA 610, 611"},{"date":"2027-06-15","day":15,"month":6,"year":2027,"reading":"DA 612-614"},{"date":"2027-06-16","day":16,"month":6,"year":2027,"reading":"DA 615-617"},{"date":"2027-06-17","day":17,"month":6,"year":2027,"reading":"DA 618-620"},{"date":"2027-06-18","day":18,"month":6,"year":2027,"reading":"John 12:20-50; DA 621,622"},{"date":"2027-06-19","day":19,"month":6,"year":2027,"reading":"DA 623-626"},{"date":"2027-06-20","day":20,"month":6,"year":2027,"reading":"Matt. 24"},{"date":"2027-06-21","day":21,"month":6,"year":2027,"reading":"Mark 13"},{"date":"2027-06-22","day":22,"month":6,"year":2027,"reading":"Luke 21:5-38; DA 627"},{"date":"2027-06-23","day":23,"month":6,"year":2027,"reading":"DA 628-630"},{"date":"2027-06-24","day":24,"month":6,"year":2027,"reading":"DA 631-633"},{"date":"2027-06-25","day":25,"month":6,"year":2027,"reading":"DA 634-636"},{"date":"2027-06-26","day":26,"month":6,"year":2027,"reading":"Matt. 25; DA 637, 638"},{"date":"2027-06-27","day":27,"month":6,"year":2027,"reading":"DA 639-641"},{"date":"2027-06-28","day":28,"month":6,"year":2027,"reading":"Luke 22:7-13, 24-39"},{"date":"2027-06-29","day":29,"month":6,"year":2027,"reading":"John 13:1-17; DA 642, 643"},{"date":"2027-06-30","day":30,"month":6,"year":2027,"reading":"Matt. 26:14-16; Mark 14:-12-16; DA 644-646"},{"date":"2027-07-01","day":1,"month":7,"year":2027,"reading":"DA 649-651"},{"date":"2027-07-02","day":2,"month":7,"year":2027,"reading":"Matt. 26:17-35; Mark 14:17-31"},{"date":"2027-07-03","day":3,"month":7,"year":2027,"reading":"Luke 22:14-23; John 13:18-30; DA 652, 653"},{"date":"2027-07-04","day":4,"month":7,"year":2027,"reading":"DA 654-656"},{"date":"2027-07-05","day":5,"month":7,"year":2027,"reading":"DA 659-661"},{"date":"2027-07-06","day":6,"month":7,"year":2027,"reading":"John 13:31-38; 14"},{"date":"2027-07-07","day":7,"month":7,"year":2027,"reading":"John 15; 16"},{"date":"2027-07-08","day":8,"month":7,"year":2027,"reading":"John 17"},{"date":"2027-07-09","day":9,"month":7,"year":2027,"reading":"DA 662-664"},{"date":"2027-07-10","day":10,"month":7,"year":2027,"reading":"DA 667-669"},{"date":"2027-07-11","day":11,"month":7,"year":2027,"reading":"DA 670-672"},{"date":"2027-07-12","day":12,"month":7,"year":2027,"reading":"DA 673-675"},{"date":"2027-07-13","day":13,"month":7,"year":2027,"reading":"DA 676-680"},{"date":"2027-07-14","day":14,"month":7,"year":2027,"reading":"Matt. 26:36-56; Mark 14:32-52"},{"date":"2027-07-15","day":15,"month":7,"year":2027,"reading":"Luke 22:39-53; John 18:1-12"},{"date":"2027-07-16","day":16,"month":7,"year":2027,"reading":"DA 685, 686"},{"date":"2027-07-17","day":17,"month":7,"year":2027,"reading":"DA 687-689"},{"date":"2027-07-18","day":18,"month":7,"year":2027,"reading":"DA 690-694"},{"date":"2027-07-19","day":19,"month":7,"year":2027,"reading":"DA 695-697"},{"date":"2027-07-20","day":20,"month":7,"year":2027,"reading":"Matt. 26:57-75"},{"date":"2027-07-21","day":21,"month":7,"year":2027,"reading":"Mark 14:53-72; DA 699"},{"date":"2027-07-22","day":22,"month":7,"year":2027,"reading":"Luke 22:54-71; John 18:13-27"},{"date":"2027-07-23","day":23,"month":7,"year":2027,"reading":"Matt. 27:1; DA 698"},{"date":"2027-07-24","day":24,"month":7,"year":2027,"reading":"DA 700-703"},{"date":"2027-07-25","day":25,"month":7,"year":2027,"reading":"DA 704-706"},{"date":"2027-07-26","day":26,"month":7,"year":2027,"reading":"DA 707-708"},{"date":"2027-07-27","day":27,"month":7,"year":2027,"reading":"DA 709-710"},{"date":"2027-07-28","day":28,"month":7,"year":2027,"reading":"DA 711-713"},{"date":"2027-07-29","day":29,"month":7,"year":2027,"reading":"DA 714-715"},{"date":"2027-07-30","day":30,"month":7,"year":2027,"reading":"Matt. 26:1-5; Mark 14:1, 2; Luke 22:1-6; DA 716"},{"date":"2027-07-31","day":31,"month":7,"year":2027,"reading":"Matt. 27: 2-10; DA 717-719"},{"date":"2027-08-01","day":1,"month":8,"year":2027,"reading":"DA 720-722"},{"date":"2027-08-02","day":2,"month":8,"year":2027,"reading":"Matt 27:11-31"},{"date":"2027-08-03","day":3,"month":8,"year":2027,"reading":"Mark 15:1-20; John 18:28-40"},{"date":"2027-08-04","day":4,"month":8,"year":2027,"reading":"Luke 23:1-25"},{"date":"2027-08-05","day":5,"month":8,"year":2027,"reading":"John 19:1-15; John 18:28-40"},{"date":"2027-08-06","day":6,"month":8,"year":2027,"reading":"DA 725, 726"},{"date":"2027-08-07","day":7,"month":8,"year":2027,"reading":"DA 727-729"},{"date":"2027-08-08","day":8,"month":8,"year":2027,"reading":"DA 730, 731"},{"date":"2027-08-09","day":9,"month":8,"year":2027,"reading":"DA 732, 733"},{"date":"2027-08-10","day":10,"month":8,"year":2027,"reading":"DA 734, 735"},{"date":"2027-08-11","day":11,"month":8,"year":2027,"reading":"DA 736, 737"},{"date":"2027-08-12","day":12,"month":8,"year":2027,"reading":"DA 738-740"},{"date":"2027-08-13","day":13,"month":8,"year":2027,"reading":"Matt. 27:32-53; Mark 15:21-47"},{"date":"2027-08-14","day":14,"month":8,"year":2027,"reading":"Luke 23:26-56"},{"date":"2027-08-15","day":15,"month":8,"year":2027,"reading":"John 19:16:42"},{"date":"2027-08-16","day":16,"month":8,"year":2027,"reading":"DA 741-743"},{"date":"2027-08-17","day":17,"month":8,"year":2027,"reading":"DA 744, 745"},{"date":"2027-08-18","day":18,"month":8,"year":2027,"reading":"DA 746, 749"},{"date":"2027-08-19","day":19,"month":8,"year":2027,"reading":"DA 750-775"},{"date":"2027-08-20","day":20,"month":8,"year":2027,"reading":"DA 753, 754"},{"date":"2027-08-21","day":21,"month":8,"year":2027,"reading":"DA 755-757"},{"date":"2027-08-22","day":22,"month":8,"year":2027,"reading":"DA 758, 759"},{"date":"2027-08-23","day":23,"month":8,"year":2027,"reading":"DA 760-761"},{"date":"2027-08-24","day":24,"month":8,"year":2027,"reading":"DA 762-764"},{"date":"2027-08-25","day":25,"month":8,"year":2027,"reading":"DA 769-770"},{"date":"2027-08-26","day":26,"month":8,"year":2027,"reading":"DA 771-773"},{"date":"2027-08-27","day":27,"month":8,"year":2027,"reading":"DA 774, 775"},{"date":"2027-08-28","day":28,"month":8,"year":2027,"reading":"Matt. 27:54-66; DA 776-778"},{"date":"2027-08-29","day":29,"month":8,"year":2027,"reading":"Matt. 28:2-4, 9-15; DA 779, 780"},{"date":"2027-08-30","day":30,"month":8,"year":2027,"reading":"DA 781-785"},{"date":"2027-08-31","day":31,"month":8,"year":2027,"reading":"DA 786-787"},{"date":"2027-09-01","day":1,"month":9,"year":2027,"reading":"Matt. 28:1, 5-8; John 20:1-18; DA 788"},{"date":"2027-09-02","day":2,"month":9,"year":2027,"reading":"Mark 16:1-14; Like 24:1-12"},{"date":"2027-09-03","day":3,"month":9,"year":2027,"reading":"DA 789-790"},{"date":"2027-09-04","day":4,"month":9,"year":2027,"reading":"DA 793-794"},{"date":"2027-09-05","day":5,"month":9,"year":2027,"reading":"Luke 24:13-32; DA 795-796"},{"date":"2027-09-06","day":6,"month":9,"year":2027,"reading":"DA 799, 800"},{"date":"2027-09-07","day":7,"month":9,"year":2027,"reading":"Luke 24:33-49; John 20:19-31; DA 801"},{"date":"2027-09-08","day":8,"month":9,"year":2027,"reading":"DA 803, 804"},{"date":"2027-09-09","day":9,"month":9,"year":2027,"reading":"DA 805, 806"},{"date":"2027-09-10","day":10,"month":9,"year":2027,"reading":"DA 807, 808"},{"date":"2027-09-11","day":11,"month":9,"year":2027,"reading":"John 21; DA 809, 810"},{"date":"2027-09-12","day":12,"month":9,"year":2027,"reading":"DA 811, 812"},{"date":"2027-09-13","day":13,"month":9,"year":2027,"reading":"DA 815-817"},{"date":"2027-09-14","day":14,"month":9,"year":2027,"reading":"Matt. 28:16-20; Mark 16:15-20; DA 818, 819"},{"date":"2027-09-15","day":15,"month":9,"year":2027,"reading":"DA 820-822"},{"date":"2027-09-16","day":16,"month":9,"year":2027,"reading":"DA 823-825"},{"date":"2027-09-17","day":17,"month":9,"year":2027,"reading":"DA 826-828"},{"date":"2027-09-18","day":18,"month":9,"year":2027,"reading":"Luke 24:50-53; DA 829, 830"},{"date":"2027-09-19","day":19,"month":9,"year":2027,"reading":"DA 831, 832"},{"date":"2027-09-20","day":20,"month":9,"year":2027,"reading":"DA 833-835"}];
+const START_DATE = "2026-09-21";
+const STORE_KEY = "encounter-christ-the-way-progress";
+const NOTES_KEY = "encounter-christ-the-way-notes";
+
+const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const ACCENTS = {
+  1: "#8f7fc7",  // January - violet
+  2: "#5b8aa6",  // February - slate blue
+  3: "#79a06a",  // March - sage
+  4: "#c9789f",  // April - dusty rose
+  5: "#c2a13a",  // May - mustard gold
+  6: "#4a9e97",  // June - teal
+  7: "#cf6f52",  // July - terracotta red
+  8: "#cf9a45",  // August - amber
+  9: "#d9843d",  // September - orange
+  10: "#b0632f", // October - rust
+  11: "#9c8c4f", // November - olive gold
+  12: "#4c6f9c"  // December - deep blue
+};
+
+function loadProgress(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveProgress(p){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(p)); }catch(e){}
+}
+let progress = loadProgress();
+
+function loadNotes(){
+  try{
+    const raw = localStorage.getItem(NOTES_KEY);
+    return raw ? JSON.parse(raw) : {};
+  }catch(e){ return {}; }
+}
+function saveNotes(n){
+  try{ localStorage.setItem(NOTES_KEY, JSON.stringify(n)); }catch(e){}
+}
+let notes = loadNotes();
+let noteSaveTimer = null;
+function queueSaveNotes(){
+  clearTimeout(noteSaveTimer);
+  noteSaveTimer = setTimeout(() => saveNotes(notes), 350);
+}
+
+function fmtDate(iso){
+  const [y,m,d] = iso.split("-").map(Number);
+  const dt = new Date(y, m-1, d);
+  return dt.toLocaleDateString(undefined, { weekday:"long", month:"long", day:"numeric" });
+}
+function fmtDateShort(iso){
+  const [y,m,d] = iso.split("-").map(Number);
+  const dt = new Date(y, m-1, d);
+  return dt.toLocaleDateString(undefined, { month:"long", day:"numeric", year:"numeric" });
+}
+
+function todayIso(){
+  const now = new Date();
+  const y = now.getFullYear(), m = String(now.getMonth()+1).padStart(2,"0"), d = String(now.getDate()).padStart(2,"0");
+  return `${y}-${m}-${d}`;
+}
+
+function groupByMonth(entries){
+  const groups = [];
+  let cur = null;
+  for(const e of entries){
+    const key = e.year + "-" + e.month;
+    if(!cur || cur.key !== key){
+      cur = { key, year:e.year, month:e.month, items:[] };
+      groups.push(cur);
+    }
+    cur.items.push(e);
+  }
+  return groups;
+}
+
+function render(){
+  document.getElementById("rangeStart").textContent = fmtDateShort(READINGS[0].date);
+  document.getElementById("rangeEnd").textContent = fmtDateShort(READINGS[READINGS.length-1].date);
+
+  const tIso = todayIso();
+  let todayEntry = READINGS.find(e => e.date === tIso);
+  let beforeStart = tIso < START_DATE;
+  let afterEnd = !todayEntry && !beforeStart;
+
+  const todayCard = document.getElementById("todayCard");
+  if(todayEntry){
+    document.getElementById("todayEyebrow").textContent = "Today's reading";
+    document.getElementById("todayDate").textContent = fmtDate(todayEntry.date);
+    document.getElementById("todayReading").textContent = todayEntry.reading;
+    const cb = document.getElementById("todayCheck");
+    cb.checked = !!progress[todayEntry.date];
+    document.getElementById("todayCheckLabel").textContent = cb.checked ? "Reading complete" : "Mark today's reading complete";
+    cb.onchange = () => {
+      if(cb.checked) progress[todayEntry.date] = true; else delete progress[todayEntry.date];
+      saveProgress(progress);
+      document.getElementById("todayCheckLabel").textContent = cb.checked ? "Reading complete" : "Mark today's reading complete";
+      updateRow(todayEntry.date);
+      updateCounts();
+    };
+
+    const noteEl = document.getElementById("todayNote");
+    noteEl.value = notes[todayEntry.date] || "";
+    noteEl.oninput = () => {
+      const v = noteEl.value;
+      if(v.trim()) notes[todayEntry.date] = v; else delete notes[todayEntry.date];
+      queueSaveNotes();
+      updateRowNoteIndicator(todayEntry.date);
+      const rowNoteEl = document.querySelector(`.note-box[data-date="${todayEntry.date}"] textarea`);
+      if(rowNoteEl && rowNoteEl !== noteEl) rowNoteEl.value = v;
+    };
+  } else {
+    document.getElementById("todayEyebrow").textContent = beforeStart ? "Plan begins soon" : "Plan complete";
+    document.getElementById("todayDate").textContent = beforeStart
+      ? fmtDate(START_DATE)
+      : "You've reached the end of the year";
+    document.getElementById("todayReading").textContent = beforeStart
+      ? READINGS[0].reading
+      : "Well done finishing Christ the Way. You can still browse or check off any reading below.";
+    todayCard.querySelector("label.check").style.display = "none";
+    document.getElementById("todayNoteField").style.display = "none";
+  }
+
+  const monthsEl = document.getElementById("months");
+  monthsEl.innerHTML = "";
+  const groups = groupByMonth(READINGS);
+
+  for(const g of groups){
+    const accent = ACCENTS[g.month];
+    const det = document.createElement("details");
+    det.className = "month";
+    det.style.setProperty("--accent", accent);
+    const isCurrentMonth = todayEntry && todayEntry.year === g.year && todayEntry.month === g.month;
+    if(isCurrentMonth || (beforeStart && g === groups[0])) det.open = true;
+
+    const summary = document.createElement("summary");
+    summary.className = "month-head";
+    summary.innerHTML = `
+      <span class="swatch"></span>
+      <span class="month-title">${MONTH_NAMES[g.month-1]}<small>${g.year} · ${g.items.length} days</small></span>
+      <span class="month-frac" data-frac="${g.key}">0/${g.items.length}</span>
+      <svg class="chev" viewBox="0 0 20 20" fill="none"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    `;
+    det.appendChild(summary);
+
+    const track = document.createElement("div");
+    track.className = "mini-track";
+    track.innerHTML = `<div class="mini-fill" data-fill="${g.key}"></div>`;
+    det.appendChild(track);
+
+    const list = document.createElement("div");
+    list.className = "day-list";
+    for(const e of g.items){
+      const item = document.createElement("div");
+      item.className = "day-item";
+      item.dataset.date = e.date;
+
+      const row = document.createElement("div");
+      row.className = "day-row";
+      row.dataset.date = e.date;
+      if(e.date === tIso) row.classList.add("today-row");
+      if(progress[e.date]) row.classList.add("done");
+
+      const cbId = "chk-" + e.date;
+      row.innerHTML = `
+        <input type="checkbox" id="${cbId}" ${progress[e.date] ? "checked" : ""}>
+        <span class="day-num">${e.day}</span>
+        <label class="day-text" for="${cbId}">${e.reading}</label>
+        <button type="button" class="note-btn${notes[e.date] ? " has-note" : ""}" aria-label="Add a note for this day" aria-expanded="false">
+          <svg viewBox="0 0 20 20" fill="none"><path d="M4 4.5h12M4 9.5h12M4 14.5h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span class="dot"></span>
+        </button>
+      `;
+
+      const noteBox = document.createElement("div");
+      noteBox.className = "note-box";
+      noteBox.dataset.date = e.date;
+      noteBox.hidden = true;
+      noteBox.innerHTML = `<textarea placeholder="What did you learn?">${notes[e.date] ? notes[e.date].replace(/</g,"&lt;") : ""}</textarea>`;
+
+      const cb = row.querySelector("input");
+      cb.addEventListener("change", () => {
+        if(cb.checked) progress[e.date] = true; else delete progress[e.date];
+        saveProgress(progress);
+        row.classList.toggle("done", cb.checked);
+        if(e.date === tIso){
+          const tcb = document.getElementById("todayCheck");
+          if(tcb){ tcb.checked = cb.checked; document.getElementById("todayCheckLabel").textContent = cb.checked ? "Reading complete" : "Mark today's reading complete"; }
+        }
+        updateMonthFrac(g.key, g.items);
+        updateCounts();
+      });
+
+      const noteBtn = row.querySelector(".note-btn");
+      noteBtn.addEventListener("click", () => {
+        const open = noteBox.hidden;
+        noteBox.hidden = !open;
+        noteBtn.classList.toggle("active", open);
+        noteBtn.setAttribute("aria-expanded", String(open));
+        if(open) noteBox.querySelector("textarea").focus();
+      });
+
+      const ta = noteBox.querySelector("textarea");
+      ta.addEventListener("input", () => {
+        const v = ta.value;
+        if(v.trim()) notes[e.date] = v; else delete notes[e.date];
+        queueSaveNotes();
+        noteBtn.classList.toggle("has-note", !!v.trim());
+        if(e.date === tIso){
+          const tNote = document.getElementById("todayNote");
+          if(tNote && tNote !== ta) tNote.value = v;
+        }
+      });
+
+      item.appendChild(row);
+      item.appendChild(noteBox);
+      list.appendChild(item);
+    }
+    det.appendChild(list);
+    monthsEl.appendChild(det);
+    updateMonthFrac(g.key, g.items);
+  }
+
+  updateCounts();
+}
+
+function updateRow(date){
+  const row = document.querySelector(`.day-row[data-date="${date}"]`);
+  if(row){
+    row.classList.toggle("done", !!progress[date]);
+    row.querySelector("input").checked = !!progress[date];
+  }
+}
+
+function updateRowNoteIndicator(date){
+  const item = document.querySelector(`.day-item[data-date="${date}"]`);
+  if(item){
+    const btn = item.querySelector(".note-btn");
+    if(btn) btn.classList.toggle("has-note", !!(notes[date] && notes[date].trim()));
+  }
+}
+
+function updateMonthFrac(key, items){
+  const done = items.filter(e => progress[e.date]).length;
+  const fracEl = document.querySelector(`[data-frac="${key}"]`);
+  const fillEl = document.querySelector(`[data-fill="${key}"]`);
+  if(fracEl) fracEl.textContent = `${done}/${items.length}`;
+  if(fillEl) fillEl.style.width = (done/items.length*100) + "%";
+}
+
+function updateCounts(){
+  const done = READINGS.filter(e => progress[e.date]).length;
+  document.getElementById("doneCount").textContent = done;
+  const pct = Math.round(done/READINGS.length*100);
+  document.getElementById("overallBar").style.width = pct + "%";
+  document.getElementById("overallPct").textContent = pct + "%";
+
+  const tIso = todayIso();
+  let idx = READINGS.findIndex(e => e.date === tIso);
+  let label = "";
+  if(idx >= 0){
+    label = `Day ${idx+1} of ${READINGS.length}`;
+  } else if(tIso < START_DATE){
+    label = "Starts " + fmtDateShort(START_DATE);
+  } else {
+    label = "Year complete";
+  }
+  document.getElementById("overallDayLabel").textContent = label;
+}
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  if(confirm("Clear all checked readings on this device?")){
+    progress = {};
+    saveProgress(progress);
+    render();
+  }
+});
+
+render();
+</script>
+</body>
+</html>
